@@ -1,0 +1,6 @@
+@SkyMon_HostAddress = http://localhost:5135
+
+GET {{SkyMon_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
