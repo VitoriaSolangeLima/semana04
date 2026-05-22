@@ -1,4 +1,3 @@
-# Código do arquivo Models/Funcionario.cs
 namespace skymoon.Models;
 
 public class Funcionario {
