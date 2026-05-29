@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SkyMon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c3b8c7f89e5ce78af8f6e0b645190cb55ea65e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f963d7dc64da3aa984684aca80b8b7f205fb5c56")]
 [assembly: System.Reflection.AssemblyProductAttribute("SkyMon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SkyMon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
