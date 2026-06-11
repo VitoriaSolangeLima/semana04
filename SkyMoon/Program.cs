@@ -29,7 +29,7 @@ app.MapGet("/", () =>
 
  app.MapPost("/funcionario", (JsonElement body) =>
 {
-    Random random = new();
+    Random random = new(); //
     Funcionario funcionario = new Funcionario();
 
     funcionario.Id = random.Next(1000, 9999);
@@ -39,6 +39,12 @@ app.MapGet("/", () =>
     funcionario.Departamento = body.GetProperty("departamento").GetString();
     funcionario.Salario = body.GetProperty("salario").GetDouble();
 
+    Console.WriteLine(funcionario.Nome);//Escrever no console
+    Console.WriteLine(funcionario.Idade);
+    Console.WriteLine(funcionario.Cargo);
+    Console.WriteLine(funcionario.Departamento);
+    Console.WriteLine(funcionario.Salario);
+
     funcionarios[totalFuncionarios] = funcionario;
     totalFuncionarios++;
     return Results.Ok(
@@ -47,12 +53,25 @@ app.MapGet("/", () =>
         }
     );
 });
-/*
-app.MapGet("/funcionario", () =>
-{
-    
-});
 
+app.MapGet("/funcionario", () =>//listagem de funcionarios
+{
+    Funcionario[] funcionariosCadastrados = new Funcionario[totalFuncionarios];
+
+    for (int i = 0; i < totalFuncionarios; i++)
+    {
+        funcionariosCadastrados[i] = funcionarios[i];
+    }
+
+    return Results.Ok(new
+    {
+        funcionariosCadastrados
+    });
+    
+    Console.WriteLine(funcionariosCadastrados);
+});
+    
+/*
 app.MapPatch("/funcionario/{id}", (int id, JsonElement body) =>
 {
     
