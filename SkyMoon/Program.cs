@@ -29,7 +29,7 @@ app.MapGet("/", () =>
 });
 
 //Adicionar novos funcionários
-app.MapPost("/cadastrarfuncionarios", (JsonElement body) =>
+app.MapPost("/cadastrarFuncionarios", (JsonElement body) =>
 {
     Random random = new();
 
@@ -53,7 +53,7 @@ app.MapPost("/cadastrarfuncionarios", (JsonElement body) =>
 });
 
 //Listar os funcionários cadastrados
-app.MapGet("/listarfuncionarios", () =>
+app.MapGet("/listarFuncionarios", () =>
 {
     Funcionario[] funcionariosCadastrados = new Funcionario[totalFuncionarios];
 
@@ -70,7 +70,7 @@ app.MapGet("/listarfuncionarios", () =>
 
 
 //Deletar funcionários
-app.MapDelete("/deletarfuncionario/{id}", (int id) =>
+app.MapDelete("/deletarFuncionarios/{id}", (int id) =>
 {
     int index = -1;
 
@@ -105,7 +105,7 @@ app.MapDelete("/deletarfuncionario/{id}", (int id) =>
 });
 
 //Atualizar funcionário
-app.MapPut("/atualizarfuncionario/{id}", (int id, JsonElement body) =>
+app.MapPut("/atualizarFuncionarios/{id}", (int id, JsonElement body) =>
 {
     Funcionario? funcionario = null;
 
@@ -139,13 +139,11 @@ app.MapPut("/atualizarfuncionario/{id}", (int id, JsonElement body) =>
         });
 });
 
-
-//Atualizar parcialmente funcionário
-app.MapPatch("/atualizarfuncionario/{id}", (int id, JsonElement body) =>
+// 7. Atualizar funcionário parcialmente 
+app.MapPatch("/funcionario/{id}", (int id, JsonElement body) =>
 {
     Funcionario? funcionario = null;
 
-    // Procurar funcionário pelo Id
     for (int i = 0; i < totalFuncionarios; i++)
     {
         if (listafuncionarios[i].Id == id)
@@ -153,16 +151,16 @@ app.MapPatch("/atualizarfuncionario/{id}", (int id, JsonElement body) =>
             funcionario = listafuncionarios[i];
 
             if (body.TryGetProperty("nome", out var nome))
-                funcionario.Nome = nome.GetString();
+                funcionario.Nome = nome.GetString() ?? "";
 
             if (body.TryGetProperty("idade", out var idade))
                 funcionario.Idade = idade.GetInt16();
 
             if (body.TryGetProperty("cargo", out var cargo))
-                funcionario.Cargo = cargo.GetString();
+                funcionario.Cargo = cargo.GetString() ?? "";
 
             if (body.TryGetProperty("departamento", out var departamento))
-                funcionario.Departamento = departamento.GetString();
+                funcionario.Departamento = departamento.GetString() ?? "";
 
             if (body.TryGetProperty("salario", out var salario))
                 funcionario.Salario = salario.GetDouble();
@@ -172,20 +170,49 @@ app.MapPatch("/atualizarfuncionario/{id}", (int id, JsonElement body) =>
         }
     }
 
-if (funcionario == null)
+    if (funcionario == null)
     {
-        return Results.NotFound(new 
-        { 
-            mensagem = "Funcionário não encontrado!" 
-            });
+        return Results.NotFound(new { mensagem = "Funcionário não encontrado!" });
     }
 
-    return Results.Ok(new 
-    { 
-        mensagem = "Funcionário atualizado parcialmente com sucesso.", 
-        funcionario 
-        });
+    return Results.Ok(new { mensagem = "Funcionário atualizado parcialmente com sucesso.", funcionario });
+});
 
+app.MapGet("/funcionario/busca/{nome}", (string nome) =>
+{
+    Funcionario[] funcionariosEncontrados = new Funcionario[totalFuncionarios];
+
+    int totalEncontrados = 0;
+
+    for (int i = 0; i < totalFuncionarios; i++)
+    {
+        if (listafuncionarios[i].Nome.ToLower() == nome.ToLower())
+        {
+            funcionariosEncontrados[totalEncontrados] = listafuncionarios[i];
+            totalEncontrados++;
+        }
+    }
+
+    if (totalEncontrados > 0)
+    {
+        Funcionario[] resultadoFinal = new Funcionario[totalEncontrados];
+
+        for (int i = 0; i < totalEncontrados; i++)
+        {
+            resultadoFinal[i] = funcionariosEncontrados[i];
+        }        
+
+        return Results.Ok(new
+        {
+            nome,
+            funcionarios = funcionariosEncontrados
+        });
+    } 
+
+    return Results.NotFound(new
+    {
+        message = "Nenhum funcionário encontrado esse nome."
+    });
 });
 
 app.Run();
